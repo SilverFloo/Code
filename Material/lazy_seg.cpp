@@ -14,7 +14,7 @@ const int INF=1e9;
 vector<ii> edge[100005];
 void uplz(int l,int r,int p,int v){
     t[p]+=(r-l+1)*v;
-    lz[p]=v;
+    lz[p]+=v;
 }
 void dolz(int l,int r,int p){
     if(lz[p]==0)return;
