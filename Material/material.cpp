@@ -83,3 +83,40 @@ int main(){
         for(auto i:s)printf("%d %d\n",i.f,i.s);
 
 }
+
+//========LCA========
+#include <bits/stdc++.h>
+using namespace std;
+
+const int N = 1e5+5;
+
+int n, m;
+int par[N][17], dep[N];
+vector<vector<int> > g(N);
+
+void init_lca(int u, int p) {
+	dep[u] = dep[p] + 1, par[u][0] = p;
+	for(int i = 1; i < 17; ++i) par[u][i] = par[par[u][i-1]][i-1];
+	for(int v : g[u]) if(v != p) init_lca(v, u);
+}
+
+int get_lca(int a, int b) {
+	if(dep[a] < dep[b]) swap(a, b);
+	for(int i = 16; ~i; --i) if(dep[par[a][i]] >= dep[b]) a = par[a][i];
+	if(a == b) return a;
+	for(int i = 16; ~i; --i) if(par[a][i] != par[b][i]) a = par[a][i], b = par[b][i];
+	return par[a][0];
+}
+
+int main() {
+	scanf("%d %d", &n, &m);
+	for(int i = 1, u, v; i < n; ++i) {
+		scanf("%d %d", &u, &v);
+		g[u].emplace_back(v), g[v].emplace_back(u);
+	}
+	init_lca(1, 0);
+	for(int i = 0, u, v; i < m; ++i) {
+		scanf("%d %d", &u, &v);
+		printf("lca %d %d : %d\n", u, v, get_lca(u, v));
+	}
+}
